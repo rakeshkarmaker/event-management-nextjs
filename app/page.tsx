@@ -74,9 +74,7 @@ export default function Home() {
               <EventCard {...event} />
             </li>
           ))}
-
         </ul>
-
       </div>
     </section>
   );

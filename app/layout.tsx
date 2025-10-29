@@ -3,6 +3,7 @@ import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
 import Plasma from "@/components/Plasma";
 import Navbar from "@/components/Navbar";
+import posthog from 'posthog-js'
 
 
 const schibstedGrotesk = Schibsted_Grotesk({
@@ -25,6 +26,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+// Initialize PostHog analytics
+  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+  api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  defaults: '2025-05-24'
+});
   return (
     <html lang="en">
       {/*  min-h-screen ensures the body takes at least the full height of the viewport */}
