@@ -6,14 +6,14 @@ const Navbar = () => {
     <header>
         <nav>
             <Link href="/" className='logo'>
-                <Image src="/icons/logo.png" alt="Logo" width={24} height={24}/>
+                <Image src="/icons/dcs-club-logo.png" alt="Logo" width={100} height={50}/>
             </Link>
             <ul className="nav-links">
                 <li><Link href="/">Home</Link></li>
                 <li><Link href="/">Events</Link></li>
                 <li><Link href="/">Create Events</Link></li>
-                <li><Link href="/">About</Link></li>
-                <li><Link href="/">Contact Us</Link></li>
+                <li><Link href="/about">About</Link></li>
+                <li><Link href="/contactus">Contact Us</Link></li>
             </ul>
 
         </nav>

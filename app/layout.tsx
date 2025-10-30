@@ -3,6 +3,7 @@ import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
 import Plasma from "@/components/Plasma";
 import Navbar from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
 
 
 const schibstedGrotesk = Schibsted_Grotesk({
@@ -44,6 +45,9 @@ export default function RootLayout({
         <main>
           {children}
         </main>
+
+        <Footer/>
+      
       </body>
     </html>
   );
