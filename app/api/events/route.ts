@@ -1,0 +1,47 @@
+import { connectToDatabase } from "@/lib/mongodb";
+import { NextRequest,NextResponse } from "next/server";
+import Event  from "@/db/event.model";
+
+export async function POST(request: Request) {
+    // error handling!
+    try{
+        //First we need to connect to the database
+        await connectToDatabase(); //Ensure database connection
+
+        //Then we need to parse the request body to get the event data
+        const formData = await request.formData();
+
+        let eventData; //empty object to hold event data
+
+        try {
+            eventData = Object.fromEntries(formData.entries()); //Convert form data to a plain object
+
+            // Validate required fields
+            const requiredFields = ['title', 'date', 'location', 'description'];
+            for (const field of requiredFields) {
+                if (!eventData[field]) {
+                    return NextResponse.json({ message: `Bad Request. Missing required field: ${field}`, status: 400 });
+                }
+            }
+
+            //Create a new event document using the Event model
+            const newEvent = await Event.create(eventData);
+
+            //Return a success response with the created event data
+            return NextResponse.json({ message: 'Event created successfully', event: newEvent, status: 201 });
+
+        } catch (err) {
+            console.log('Error parsing form data:', err);
+            return NextResponse.json({ message: 'Bad Request. Invalid form data', error: err instanceof Error ? err.message : 'Unknown', status: 400 });
+        }
+    
+
+    }catch(err){
+        console.log('Error in POST /api/events:', err);
+        // return new Response('Internal Server Error', { status: 500 });
+        // So here is what's happening here: We are returning a JSON response with a message indicating that there was an internal server error during event creation.
+        // Additionally, we include the error message if the error is an instance of the Error class; otherwise, we provide a generic 'Unknown' message. The status code is set to 500 to indicate a server error.
+        return NextResponse.json({ message: 'Internal Server Error. Event creation failed' ,error: err instanceof Error ? err.message: 'Unknown', status: 500 });    
+
+    }
+}
