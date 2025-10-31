@@ -1,49 +1,53 @@
-import mongoose from "mongoose";
+import { Goal } from "lucide-react";
+import mongoose, { Mongoose } from "mongoose";
 
-
-// Define a function to connection cache type
+//1. Define a function to connection cache type
 type mongooseCache = {
-    conn: typeof mongoose | null;
-    promise: Promise<typeof mongoose> | null;
+    conn: typeof mongoose | null; // Cached connection
+    promise: Promise<typeof mongoose> | null; // Connection promise
 };
 
-// Extend the global object to include the mongoose cache
+//2. Extend the global object to include the mongoose cache
 declare global {
-    var mongooseCache: mongooseCache;
+    var mongoCache: mongooseCache; // Mongoose connection cache
 }
-// Initialize the mongoose cache if it doesn't exist
-global.mongooseCache = global.mongooseCache || { conn: null, promise: null };
-const MONGODB_URI = process.env.MONGODB_URI;
 
-//Validation: Throw an error if the MONGODB_URI is not defined
+//3. Initialize the mongoose cache if it doesn't exist
+if (!global.mongoCache) {
+    global.mongoCache = { conn: null, promise: null };
+}
+let cached: mongooseCache = global.mongoCache || undefined;
+
+//4. Defining the MONGODB_URI constant
+const MONGODB_URI = process.env.MONGODB_URI as string;
+console.log("MONGODB_URI:", MONGODB_URI);
 if (!MONGODB_URI) {
     throw new Error("Please define the environment variable MONGODB_URI inside .env. file");
 }
 
-// Function to connect to MongoDB using Mongoose with caching
+
+
+//5. Function to connect to MongoDB using Mongoose with caching
 export async function connectToDatabase(): Promise<typeof mongoose> {
-    if (global.mongooseCache.conn) { // Return the cached connection if it exists
-        return global.mongooseCache.conn;
+    const cache = global.mongoCache;
+
+    if (cache.conn) { // Return the cached connection if it exists
+        return cache.conn;
     }
 
-    if (!global.mongooseCache.promise) { // Create a new connection promise if it doesn't exist
-        const opts = {
-            bufferCommands: false,
-        };
+    if (!cache.promise) { // Create a new connection promise if it doesn't exist
+        const opts = { bufferCommands: false, };// Disable mongoose buffering
 
         // Create a new Mongoose connection promise
-        global.mongooseCache.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
-            return mongoose;
-        });
+        cache.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => mongoose); // Return the mongoose instance  
     }
 
     try {
-    // Await the connection promise
-    global.mongooseCache.conn = await global.mongooseCache.promise;
-    return global.mongooseCache.conn; // Return the established c onnection
-    } catch (error) {
-        global.mongooseCache.promise = null; // Reset the promise on failure
-        throw error;
+        cache.conn = await cache.promise; // Await the connection promise
+        return cache.conn;
+    } catch (err) { // Handle connection errors
+        cache.promise = null;
+        throw err;
     }
 }
 

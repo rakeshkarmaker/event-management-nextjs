@@ -5,7 +5,7 @@
 /dist
 
 # Sensitive files
-/process.env
+/.env.local
 
 # dependencies
 /node_modules
