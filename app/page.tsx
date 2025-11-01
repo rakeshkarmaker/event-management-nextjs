@@ -2,8 +2,9 @@ import Image from "next/image";
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
 import { time } from "console";
-import { cacheLife } from "next/cache";
 import { IEvent } from "@/db/event.model";
+import { connectToDatabase } from "@/lib/mongodb";
+import Event from "@/db/event.model";
 
 const events = [
   { image: '/images/events/event1.jpg', 
@@ -64,12 +65,8 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 
 export default async function Home() {
-  // Fetch operation for events from the API
-  'use cache'; // Enable caching for this fetch operation (Constant data refetching is not logical for a homepage right!)
-  cacheLife('hours'); // Cache for 1 hour
-  const response = await fetch(`${BASE_URL}/api/events`, { next: { revalidate: 3600 } }); // Revalidate every hour! This means the data will be fresh within an hour.
-  const {events} = await response.json(); // Parse the JSON response
-  // const events: Event[] = data.events; // Extract events array from the response
+  await connectToDatabase();
+  const events = await Event.find({}).lean() as unknown as IEvent[];
 
   return (
     <section>
