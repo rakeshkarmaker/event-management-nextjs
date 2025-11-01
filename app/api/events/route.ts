@@ -1,7 +1,24 @@
+'use server';
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Event from "@/db/event.model";
 import { v2 as cloudinary } from 'cloudinary'; // Import Cloudinary v2 API
+
+
+// GET  /api/events - Fetch all events
+export async function GET() {
+    try {
+        await connectToDatabase(); //Ensure database connection
+        const events = await Event.find({}).lean(); //Fetch all events from the database as plain JS objects
+        return NextResponse.json({ message: 'Events fetch OK', events }, { status: 200 });
+    } catch (err) {
+        console.log('Error in GET /api/events:', err);
+        return NextResponse.json({ message: 'Internal Server Error. Events fetch failed', error: err instanceof Error ? err.message : 'Unknown', status: 500 });
+    }
+}
+
+
+// POST /api/events - Create a new event
 
 export async function POST(request: Request) {
     // error handling!
@@ -47,8 +64,12 @@ export async function POST(request: Request) {
                 return NextResponse.json({ message: 'Image upload not uploaded or invalid.', status: 501 });
             }
 
-            //Create a new event document using the Event model
-            const newEvent = await Event.create(eventData);
+            //v1.3.4- Minor fix to have tags and agenda in the right order!
+            let tags = JSON.parse(formData.get('tags') as string);
+            let agenda = JSON.parse(formData.get('agenda') as string);
+
+            //Create a new event //v1.3.4- Minor fix, event will be now created with a JSON parsed Agenda
+            const newEvent = await Event.create({...eventData,tags:tags,agenda:agenda});
 
             //Return a success response with the created event data
             return NextResponse.json({ message: 'Event created successfully', event: newEvent, status: 201 });

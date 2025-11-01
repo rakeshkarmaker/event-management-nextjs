@@ -9,11 +9,11 @@ const Navbar = () => {
                 <Image src="/icons/dcs-club-logo.png" alt="Logo" width={100} height={50}/>
             </Link>
             <ul className="nav-links">
-                <li><Link href="/">Home</Link></li>
-                <li><Link href="/">Events</Link></li>
-                <li><Link href="/">Create Events</Link></li>
-                <li><Link href="/about">About</Link></li>
-                <li><Link href="/contactus">Contact Us</Link></li>
+                <Link href="/">Home</Link>
+                <Link href="/">Events</Link>
+                <Link href="/about">About</Link>
+                <Link href="/contactus">Contact Us</Link>
+                <Link href="/">Create Events</Link>
             </ul>
 
         </nav>
