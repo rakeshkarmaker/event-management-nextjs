@@ -4,7 +4,8 @@ import { cacheLife } from "next/cache";
 
 
 // Base URL for API requests
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'dcsevents.netlify.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
 
 export default async function Events() {
      'use cache'; // Enable caching for this fetch operation (Constant data refetching is not logical for a homepage right!)
