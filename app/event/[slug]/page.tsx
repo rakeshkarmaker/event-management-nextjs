@@ -1,14 +1,12 @@
-//Here is what Nextjs 16 will look like
 import Image from 'next/image';
-import { cacheLife } from 'next/cache';
 import { notFound } from 'next/navigation';
 import EventBooking from '@/components/EventBooking';
 import getSimilarEventsBySlug from '@/lib/actions/event.actions';
 import { IEvent } from '@/db/event.model';
 import EventCard from '@/components/EventCard';
+import { connectToDatabase } from "@/lib/mongodb";
+import Event from "@/db/event.model";
 
-// Base URL for API requests
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 
 // Making a reusable component for event details item
@@ -54,13 +52,15 @@ const EventTags = ({ tags }: { tags: string[] }) => {
   );
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function EventsPage({ params }: { params: Promise<{ slug: string }> }) {
 
-  'use cache';
-  cacheLife('hours'); // Cache for 1 hour
   const { slug } = await params;
-  const response = await fetch(`${BASE_URL}/api/events/${slug}`, { next: { revalidate: 3600 } }); // Revalidate every hour! This means the data will be fresh within an hour.
-  const { event } = await response.json(); // Parse the JSON response. Note destructuring name must be same as in the response from the API
+  
+  await connectToDatabase();
+  const sanitizedSlug = slug.toLowerCase().trim();
+  const event = await Event.findOne({ slug: sanitizedSlug }).lean() as unknown as IEvent;
 
   if (!event) return notFound();
 
@@ -68,10 +68,8 @@ export default async function EventsPage({ params }: { params: Promise<{ slug: s
   //destructuring the event object
   const { title, date, time, location, overview, description, mode, audience, image, agenda, organizer, tags, } = event;
 
-  const bookingCount = 25; // Dummy booking count for now 
-  //Similar events
+  const bookingCount = 25;
   const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
-  console.log(similarEvents);
 
 
   return (
