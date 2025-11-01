@@ -8,8 +8,8 @@ import { IEvent } from '@/db/event.model';
 import EventCard from '@/components/EventCard';
 
 // Base URL for API requests
-// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'dcsevents.netlify.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
 
 // Making a reusable component for event details item
 const EventDetailsItem = ({ icon, alt, label }: { icon: string; alt: string; label: string }) => {

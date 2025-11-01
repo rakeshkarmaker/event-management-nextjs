@@ -60,7 +60,7 @@ interface Event {
 }
 
 // Base URL for API requests
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'dcsevents.netlify.app';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
 
 
 export default async function Home() {
