@@ -12,6 +12,7 @@ type RouteParams ={
         slug: string;
     }>;
 };
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request, {params}: RouteParams) : Promise<NextResponse> {
     try {
