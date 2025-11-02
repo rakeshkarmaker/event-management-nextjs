@@ -2,7 +2,6 @@ import Image from "next/image";
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
 import { time } from "console";
-import { cacheLife } from "next/cache";
 import { IEvent } from "@/db/event.model";
 
 // const events = [
