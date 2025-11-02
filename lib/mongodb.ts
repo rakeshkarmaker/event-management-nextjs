@@ -20,7 +20,6 @@ let cached: mongooseCache = global.mongoCache || undefined;
 
 //4. Defining the MONGODB_URI constant
 const MONGODB_URI = process.env.MONGODB_URI as string;
-console.log("MONGODB_URI:", MONGODB_URI);
 if (!MONGODB_URI) {
     throw new Error("Please define the environment variable MONGODB_URI inside .env. file");
 }

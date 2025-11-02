@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       {/*  min-h-screen ensures the body takes at least the full height of the viewport */}
-      <body className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}>
+    <body className={`${schibstedGrotesk?.variable ?? ""} ${martianMono?.variable ?? ""} min-h-screen antialiased`}>
         <Navbar/>
 
         <div className="fixed inset-0 top-0 z-[-1] min-h-screen">
