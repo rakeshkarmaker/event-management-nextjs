@@ -1,29 +1,15 @@
-import EventCard from "@/components/EventCard";
-import { IEvent } from "@/db/event.model";
-import { connectToDatabase } from "@/lib/mongodb";
-import Event from "@/db/event.model";
+import { Suspense } from "react";
+import EventDetails from '@/components/EventDetails'
 
 
-export default async function Events() {
-      await connectToDatabase();
-      const events = await Event.find({}).lean() as unknown as IEvent[];
 
+
+const EventDetailsPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+    const slug = params.then((p) => p.slug);
 
     return (
-        <section>
-      <h1 className="text-center">View All Events</h1>
-      
-      <div className="mt-20 space-y-7">
+        <EventDetails params={slug} />
 
-        <ul className="events">
-          {events && events.length > 0 && events.map((event) => (
-            <li key={event.title} className="list-none">
-              <EventCard {...event} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
     )
-
 }
+export default EventDetailsPage
