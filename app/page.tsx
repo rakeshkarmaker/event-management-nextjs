@@ -1,9 +1,8 @@
 import Image from "next/image";
 import ExploreBtn from "@/components/ExploreBtn";
 import EventCard from "@/components/EventCard";
-import { time } from "console";
 import { IEvent } from "@/db/event.model";
-
+import { cacheLife } from 'next/cache';
 // const events = [
 //   { image: '/images/events/event1.jpg', 
 //     title: 'Intra Debate Championship',
